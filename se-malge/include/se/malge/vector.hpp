@@ -62,9 +62,36 @@ namespace se::malge
 			const se::malge::Vector<T, N> &operator=(const se::malge::Vector<U, N> &vector);
 
 
+			template <typename U>
+			requires se::malge::IsMathType<U>
+			const se::malge::Vector<T, N> &operator+=(const se::malge::Vector<U, N> &vector);
+
+			template <typename U>
+			requires se::malge::IsMathType<U>
+			const se::malge::Vector<T, N> &operator-=(const se::malge::Vector<U, N> &vector);
+
+			template <typename U>
+			requires se::malge::IsMathType<U>
+			const se::malge::Vector<T, N> &operator*=(const se::malge::Vector<U, N> &vector);
+
+
 			inline T &operator[](se::malge::Uint8 i);
 			inline const T &operator[](se::malge::Uint8 i) const;
 	};
+
+
+
+	template <typename T, se::malge::Uint8 N, typename U>
+	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
+	se::malge::Vector<T, N> &operator+(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs);
+
+	template <typename T, se::malge::Uint8 N, typename U>
+	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
+	se::malge::Vector<T, N> &operator-(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs);
+
+	template <typename T, se::malge::Uint8 N, typename U>
+	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
+	se::malge::Vector<T, N> &operator*(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs);
 
 
 
