@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+
+# Scripts
+*.sh
+*.bat
+*.ps1
+
+# Vs code
+.vscode/*
