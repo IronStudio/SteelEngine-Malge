@@ -16,12 +16,17 @@ int main(int, char **) {
 	std::cout << vector3 << std::endl;
 
 	se::malge::Vec3f32 vector4 {0.1f};
-	std::cout << vector4 << std::endl;
+	std::cout << "vec4 : " << vector4 << std::endl;
 
 	vector3 += vector4;
-	std::cout << vector3 << std::endl;
+	std::cout << "vec3 : " << vector3 << std::endl;
 	std::cout << vector3 * vector4 << std::endl;
 	std::cout << vector3 - vector4 << std::endl;
+
+	std::cout << se::malge::dot(vector3, vector4) << std::endl;
+	std::cout << se::malge::cross(vector3, vector4) << std::endl;
+	std::cout << se::malge::length2(vector3) << std::endl;
+	std::cout << se::malge::length(vector3) << std::endl;
 
 
 	return 0;

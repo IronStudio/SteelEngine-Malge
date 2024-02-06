@@ -83,15 +83,34 @@ namespace se::malge
 
 	template <typename T, se::malge::Uint8 N, typename U>
 	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
-	se::malge::Vector<T, N> &operator+(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs);
+	se::malge::Vector<T, N> operator+(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs);
 
 	template <typename T, se::malge::Uint8 N, typename U>
 	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
-	se::malge::Vector<T, N> &operator-(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs);
+	se::malge::Vector<T, N> operator-(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs);
 
 	template <typename T, se::malge::Uint8 N, typename U>
 	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
-	se::malge::Vector<T, N> &operator*(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs);
+	se::malge::Vector<T, N> operator*(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs);
+
+	template <typename T, se::malge::Uint8 N, typename U>
+	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
+	T dot(const se::malge::Vector<T, N> &lhs, const se::malge::Vector<U, N> &rhs);
+
+	template <typename T, typename U>
+	requires se::malge::IsValidVector<T, 3> && se::malge::IsValidVector<U, 3>
+	se::malge::Vector<T, 3> cross(const se::malge::Vector<T, 3> &lhs, const se::malge::Vector<U, 3> &rhs);
+
+	template <typename T, se::malge::Uint8 N>
+	requires se::malge::IsValidVector<T, N>
+	inline T length2(const se::malge::Vector<T, N> &vector);
+
+	template <typename T, se::malge::Uint8 N>
+	requires se::malge::IsValidVector<T, N>
+	#ifndef SE_MALGE_VECTORIZE
+		inline
+	#endif
+	T length(const se::malge::Vector<T, N> &vector);
 
 
 

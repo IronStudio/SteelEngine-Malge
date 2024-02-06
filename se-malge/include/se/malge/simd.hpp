@@ -63,6 +63,10 @@ namespace se::malge::simd
 
 	template <typename T>
 	requires se::malge::simd::IsValidSIMD<T>
+	T convertSingleLaneToScalar(SIMD_TYPE(T) a);
+
+	template <typename T>
+	requires se::malge::simd::IsValidSIMD<T>
 	SIMD_TYPE(T) add(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
 
 	template <typename T>
@@ -72,6 +76,18 @@ namespace se::malge::simd
 	template <typename T>
 	requires se::malge::simd::IsValidSIMD<T>
 	SIMD_TYPE(T) mul(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
+
+	template <typename T>
+	requires se::malge::simd::IsValidSIMD<T>
+	SIMD_TYPE(T) dot(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
+
+	template <typename T>
+	requires se::malge::simd::IsValidSIMD<T>
+	SIMD_TYPE(T) cross(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
+
+	template <typename T>
+	requires std::is_same_v<T, se::malge::Float32>
+	SIMD_TYPE(T) ssqrt(SIMD_TYPE(T) a);
 
 
 
@@ -96,6 +112,18 @@ namespace se::malge::simd
 		template <>
 		inline void store<se::malge::Float> (SIMD_TYPE(se::malge::Float) a, se::malge::Float data[4]) {
 			_mm_store_ps(data, a);
+		}
+
+
+
+		template <>
+		se::malge::Int32 convertSingleLaneToScalar<se::malge::Int32> (SIMD_TYPE(se::malge::Int32) a) {
+			return _mm_cvtsi128_si32(a);
+		}
+
+		template <>
+		se::malge::Float convertSingleLaneToScalar<se::malge::Float> (SIMD_TYPE(se::malge::Float) a) {
+			return _mm_cvtss_f32(a);
 		}
 
 
@@ -132,6 +160,54 @@ namespace se::malge::simd
 		template <>
 		inline SIMD_TYPE(se::malge::Float) mul<se::malge::Float> (SIMD_TYPE(se::malge::Float) a, SIMD_TYPE(se::malge::Float) b) {
 			return _mm_mul_ps(a, b);
+		}
+
+
+
+		template <>
+		inline SIMD_TYPE(se::malge::Int32) dot<se::malge::Int32> (SIMD_TYPE(se::malge::Int32) a, SIMD_TYPE(se::malge::Int32) b) {
+			__m128i c {_mm_mul_epi32(a, b)};
+			return _mm_hadd_epi32(c, c);
+		}
+
+		template <>
+		inline SIMD_TYPE(se::malge::Float) dot<se::malge::Float> (SIMD_TYPE(se::malge::Float) a, SIMD_TYPE(se::malge::Float) b) {
+			__m128 c {_mm_mul_ps(a, b)};
+			__m128 shuffle {_mm_movehdup_ps(c)};
+			c = _mm_add_ps(c, shuffle);
+			shuffle = _mm_movehl_ps(shuffle, c);
+			return _mm_add_ss(c, shuffle);
+		}
+
+
+
+		template <>
+		inline SIMD_TYPE(se::malge::Int32) cross<se::malge::Int32> (SIMD_TYPE(se::malge::Int32) a, SIMD_TYPE(se::malge::Int32) b) {
+			__m128i firstA {_mm_shuffle_epi32(a, _MM_SHUFFLE(3, 0, 2, 1))};
+			__m128i secondA {_mm_shuffle_epi32(a, _MM_SHUFFLE(3, 1, 0, 2))};
+			__m128i firstB {_mm_shuffle_epi32(b, _MM_SHUFFLE(3, 1, 0, 2))};
+			__m128i secondB {_mm_shuffle_epi32(b, _MM_SHUFFLE(3, 0, 2, 1))};
+			firstA = _mm_mul_epi32(firstA, firstB);
+			secondA = _mm_mul_epi32(secondA, secondB);
+			return _mm_sub_epi32(firstA, secondA);
+		}
+
+		template <>
+		inline SIMD_TYPE(se::malge::Float) cross<se::malge::Float> (SIMD_TYPE(se::malge::Float) a, SIMD_TYPE(se::malge::Float) b) {
+			__m128 firstA {_mm_shuffle_ps(a, a, _MM_SHUFFLE(3, 0, 2, 1))};
+			__m128 secondA {_mm_shuffle_ps(a, a, _MM_SHUFFLE(3, 1, 0, 2))};
+			__m128 firstB {_mm_shuffle_ps(b, b, _MM_SHUFFLE(3, 1, 0, 2))};
+			__m128 secondB {_mm_shuffle_ps(b, b, _MM_SHUFFLE(3, 0, 2, 1))};
+			firstA = _mm_mul_ps(firstA, firstB);
+			secondA = _mm_mul_ps(secondA, secondB);
+			return _mm_sub_ps(firstA, secondA);
+		}
+
+
+
+		template <>
+		SIMD_TYPE(se::malge::Float) ssqrt<se::malge::Float> (SIMD_TYPE(se::malge::Float) a) {
+			return _mm_sqrt_ss(a);
 		}
 	#endif
 

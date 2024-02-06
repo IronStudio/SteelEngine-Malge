@@ -1,5 +1,6 @@
 #include "se/malge/vector.hpp"
 
+#include <cmath>
 #include <cstring>
 #include <tuple>
 
@@ -30,8 +31,20 @@ namespace se::malge
 	Vector<T, N>::Vector(Fill fill) {
 		reinterpret_cast<T*> (this)[0] = static_cast<T> (fill);
 		reinterpret_cast<T*> (this)[1] = static_cast<T> (fill);
-		reinterpret_cast<T*> (this)[2] = static_cast<T> (fill);
-		reinterpret_cast<T*> (this)[3] = static_cast<T> (fill);
+		if constexpr (N == 3) {
+			reinterpret_cast<T*> (this)[2] = static_cast<T> (fill);
+			reinterpret_cast<T*> (this)[3] = static_cast<T> (0);
+		}
+
+		else if constexpr (N == 4) {
+			reinterpret_cast<T*> (this)[2] = static_cast<T> (fill);
+			reinterpret_cast<T*> (this)[3] = static_cast<T> (fill);
+		}
+
+		else {
+			reinterpret_cast<T*> (this)[2] = static_cast<T> (0);
+			reinterpret_cast<T*> (this)[3] = static_cast<T> (0);
+		}
 	}
 
 
@@ -197,7 +210,7 @@ namespace se::malge
 
 	template <typename T, se::malge::Uint8 N, typename U>
 	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
-	se::malge::Vector<T, N> &operator+(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs) {
+	se::malge::Vector<T, N> operator+(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs) {
 		return lhs += rhs;
 	}
 
@@ -205,7 +218,7 @@ namespace se::malge
 
 	template <typename T, se::malge::Uint8 N, typename U>
 	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
-	se::malge::Vector<T, N> &operator-(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs) {
+	se::malge::Vector<T, N> operator-(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs) {
 		return lhs -= rhs;
 	}
 
@@ -213,8 +226,95 @@ namespace se::malge
 
 	template <typename T, se::malge::Uint8 N, typename U>
 	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
-	se::malge::Vector<T, N> &operator*(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs) {
+	se::malge::Vector<T, N> operator*(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs) {
 		return lhs *= rhs;
+	}
+
+
+
+	template <typename T, se::malge::Uint8 N, typename U>
+	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
+	T dot(const se::malge::Vector<T, N> &lhs, const se::malge::Vector<U, N> &rhs) {
+		#ifdef SE_MALGE_VECTORIZE
+			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
+				auto a {se::malge::simd::load<T> (reinterpret_cast<const T*> (&lhs))};
+				auto b {se::malge::simd::load<T> (reinterpret_cast<const T*> (&rhs))};
+				a = se::malge::simd::dot<T> (a, b);
+				return se::malge::simd::convertSingleLaneToScalar<T> (a);
+			}
+
+			else {
+		#endif
+
+		T result {0};
+		for (se::malge::Uint8 i {0}; i < N; ++i)
+			result += reinterpret_cast<const T*> (&lhs)[i] * static_cast<T> (reinterpret_cast<const U*> (&lhs)[i]);
+		return result;
+
+		#ifdef SE_MALGE_VECTORIZE
+			}
+		#endif
+	}
+
+
+
+	template <typename T, typename U>
+	requires se::malge::IsValidVector<T, 3> && se::malge::IsValidVector<U, 3>
+	se::malge::Vector<T, 3> cross(const se::malge::Vector<T, 3> &lhs, const se::malge::Vector<U, 3> &rhs) {
+		se::malge::Vector<T, 3> result {};
+
+		#ifdef SE_MALGE_VECTORIZE
+			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
+				auto a {se::malge::simd::load(reinterpret_cast<const T*> (&lhs))};
+				auto b {se::malge::simd::load(reinterpret_cast<const T*> (&rhs))};
+				auto c {se::malge::simd::cross<T> (a, b)};
+				se::malge::simd::store(c, reinterpret_cast<T*> (&result));
+			}
+
+			else {
+		#endif
+
+		result.x = lhs.y * static_cast<U> (rhs.z) - lhs.z * static_cast<U> (rhs.y);
+		result.y = lhs.z * static_cast<U> (rhs.x) - lhs.x * static_cast<U> (rhs.z);
+		result.z = lhs.x * static_cast<U> (rhs.y) - lhs.y * static_cast<U> (rhs.x);
+
+		#ifdef SE_MALGE_VECTORIZE
+			}
+		#endif
+
+
+		return result;
+	}
+
+
+
+	template <typename T, se::malge::Uint8 N>
+	requires se::malge::IsValidVector<T, N>
+	T length2(const se::malge::Vector<T, N> &vector) {
+		return se::malge::dot(vector, vector);
+	}
+
+
+
+	template <typename T, se::malge::Uint8 N>
+	requires se::malge::IsValidVector<T, N>
+	T length(const se::malge::Vector<T, N> &vector) {
+		#ifdef SE_MALGE_VECTORIZE
+			if constexpr (std::is_same_v<T, se::malge::Float32>) {
+				auto a {se::malge::simd::load<T> (reinterpret_cast<const T*> (&vector))};
+				a = se::malge::simd::dot<T> (a, a);
+				a = se::malge::simd::ssqrt<T> (a);
+				return se::malge::simd::convertSingleLaneToScalar<T> (a);
+			}
+
+			else {
+		#endif
+
+			return sqrt(se::malge::length2(vector));
+
+		#ifdef SE_MALGE_VECTORIZE
+			}
+		#endif
 	}
 
 
