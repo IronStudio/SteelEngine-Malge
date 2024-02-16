@@ -90,6 +90,59 @@ namespace se::malge
 
 
 
+	template <typename T>
+	requires se::malge::IsValidMatrix<T, 2>
+	using Mat2    = se::malge::Matrix<T, 2>;
+	using Mat2i8  = se::malge::Mat2<se::malge::Int8>;
+	using Mat2u8  = se::malge::Mat2<se::malge::Uint8>;
+	using Mat2i16 = se::malge::Mat2<se::malge::Int16>;
+	using Mat2u16 = se::malge::Mat2<se::malge::Uint16>;
+	using Mat2i32 = se::malge::Mat2<se::malge::Int32>;
+	using Mat2u32 = se::malge::Mat2<se::malge::Uint32>;
+	using Mat2i64 = se::malge::Mat2<se::malge::Int64>;
+	using Mat2u64 = se::malge::Mat2<se::malge::Uint64>;
+	using Mat2i   = se::malge::Mat2<se::malge::Int>;
+	using Mat2u   = se::malge::Mat2<se::malge::Uint>;
+	using Mat2f32 = se::malge::Mat2<se::malge::Float32>;
+	using Mat2f64 = se::malge::Mat2<se::malge::Float64>;
+	using Mat2f   = se::malge::Mat2<se::malge::Float>;
+
+	template <typename T>
+	requires se::malge::IsValidMatrix<T, 3>
+	using Mat3    = se::malge::Matrix<T, 3>;
+	using Mat3i8  = se::malge::Mat3<se::malge::Int8>;
+	using Mat3u8  = se::malge::Mat3<se::malge::Uint8>;
+	using Mat3i16 = se::malge::Mat3<se::malge::Int16>;
+	using Mat3u16 = se::malge::Mat3<se::malge::Uint16>;
+	using Mat3i32 = se::malge::Mat3<se::malge::Int32>;
+	using Mat3u32 = se::malge::Mat3<se::malge::Uint32>;
+	using Mat3i64 = se::malge::Mat3<se::malge::Int64>;
+	using Mat3u64 = se::malge::Mat3<se::malge::Uint64>;
+	using Mat3i   = se::malge::Mat3<se::malge::Int>;
+	using Mat3u   = se::malge::Mat3<se::malge::Uint>;
+	using Mat3f32 = se::malge::Mat3<se::malge::Float32>;
+	using Mat3f64 = se::malge::Mat3<se::malge::Float64>;
+	using Mat3f   = se::malge::Mat3<se::malge::Float>;
+
+	template <typename T>
+	requires se::malge::IsValidMatrix<T, 4>
+	using Mat4    = se::malge::Matrix<T, 4>;
+	using Mat4i8  = se::malge::Mat4<se::malge::Int8>;
+	using Mat4u8  = se::malge::Mat4<se::malge::Uint8>;
+	using Mat4i16 = se::malge::Mat4<se::malge::Int16>;
+	using Mat4u16 = se::malge::Mat4<se::malge::Uint16>;
+	using Mat4i32 = se::malge::Mat4<se::malge::Int32>;
+	using Mat4u32 = se::malge::Mat4<se::malge::Uint32>;
+	using Mat4i64 = se::malge::Mat4<se::malge::Int64>;
+	using Mat4u64 = se::malge::Mat4<se::malge::Uint64>;
+	using Mat4i   = se::malge::Mat4<se::malge::Int>;
+	using Mat4u   = se::malge::Mat4<se::malge::Uint>;
+	using Mat4f32 = se::malge::Mat4<se::malge::Float32>;
+	using Mat4f64 = se::malge::Mat4<se::malge::Float64>;
+	using Mat4f   = se::malge::Mat4<se::malge::Float>;
+
+
+
 } // namespace se::malge
 
 
