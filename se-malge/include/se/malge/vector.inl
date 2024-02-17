@@ -192,6 +192,45 @@ namespace se::malge
 
 	template <typename T, se::malge::Uint8 N>
 	requires se::malge::IsValidVector<T, N>
+	template <typename U>
+	requires se::malge::IsMathType<U>
+	const se::malge::Vector<T, N> &Vector<T, N>::operator*=(U scalar) {
+		#ifdef SE_MALGE_VECTORIZE
+			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
+				auto a {se::malge::simd::load(reinterpret_cast<const T*> (this))};
+				auto b {se::malge::simd::loadScalar(&scalar)};
+				auto c {se::malge::simd::mul<T> (a, b)};
+				se::malge::simd::store(c, reinterpret_cast<T*> (this));
+			}
+
+			else {
+		#endif
+
+		for (se::malge::Uint8 i {0}; i < N; ++i)
+			reinterpret_cast<T*> (this)[i] *= scalar;
+
+		#ifdef SE_MALGE_VECTORIZE
+			}
+		#endif
+
+		return *this;
+	}
+
+
+
+	template <typename T, se::malge::Uint8 N>
+	requires se::malge::IsValidVector<T, N>
+	template <typename U>
+	requires se::malge::IsMathType<U>
+	const se::malge::Vector<T, N> &Vector<T, N>::operator/=(U scalar) {
+		SE_MALGE_ASSERT(scalar != 0, "Can't divide vector by 0");
+		return *this *= (1.f / scalar);
+	}
+
+
+
+	template <typename T, se::malge::Uint8 N>
+	requires se::malge::IsValidVector<T, N>
 	T &Vector<T, N>::operator[](se::malge::Uint8 i) {
 		SE_MALGE_ASSERT(i >= 0 && i < N, "i is not a valid vector index");
 		return reinterpret_cast<T*> (this)[i];
@@ -228,6 +267,30 @@ namespace se::malge
 	requires se::malge::IsValidVector<T, N> && se::malge::IsValidVector<U, N>
 	se::malge::Vector<T, N> operator*(se::malge::Vector<T, N> lhs, const se::malge::Vector<U, N> &rhs) {
 		return lhs *= rhs;
+	}
+
+
+
+	template <typename T, se::malge::Uint8 N, typename U>
+	requires se::malge::IsValidVector<T, N> && se::malge::IsMathType<U>
+	se::malge::Vector<T, N> operator*(se::malge::Vector<T, N> lhs, U scalar) {
+		return lhs *= scalar;
+	}
+
+
+
+	template <typename T, se::malge::Uint8 N, typename U>
+	requires se::malge::IsValidVector<T, N> && se::malge::IsMathType<U>
+	se::malge::Vector<T, N> operator*(U scalar, se::malge::Vector<T, N> lhs) {
+		return lhs *= scalar;
+	}
+
+
+
+	template <typename T, se::malge::Uint8 N, typename U>
+	requires se::malge::IsValidVector<T, N> && se::malge::IsMathType<U>
+	se::malge::Vector<T, N> operator/(se::malge::Vector<T, N> lhs, U scalar) {
+		return lhs /= scalar;
 	}
 
 
