@@ -420,10 +420,10 @@ namespace se::malge
 				c2 = se::malge::simd::mul<T> (c2, s);
 				c3 = se::malge::simd::mul<T> (c3, s);
 				c4 = se::malge::simd::mul<T> (c4, s);
-				se::malge::simd::store<T> (c1, reinterpret_cast<const T*> (this));
-				se::malge::simd::store<T> (c2, reinterpret_cast<const T*> (this + 4));
-				se::malge::simd::store<T> (c3, reinterpret_cast<const T*> (this + 8));
-				se::malge::simd::store<T> (c4, reinterpret_cast<const T*> (this + 12));
+				se::malge::simd::store<T> (c1, reinterpret_cast<T*> (this));
+				se::malge::simd::store<T> (c2, reinterpret_cast<T*> (this + 4));
+				se::malge::simd::store<T> (c3, reinterpret_cast<T*> (this + 8));
+				se::malge::simd::store<T> (c4, reinterpret_cast<T*> (this + 12));
 			}
 
 			else {
@@ -432,7 +432,7 @@ namespace se::malge
 
 		for (se::malge::Uint8 c {0}; c < N; ++c) {
 			for (se::malge::Uint8 r {0}; r < N; ++r) {
-				*(reinterpret_cast<const T*> (this) + c * 4 + r) *= scalar;
+				*(reinterpret_cast<T*> (this) + c * 4 + r) *= scalar;
 			}
 		}
 
