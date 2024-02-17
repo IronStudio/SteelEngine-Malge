@@ -38,14 +38,15 @@ namespace se::malge
 
 	template <typename T, se::malge::Uint8 N>
 	requires se::malge::IsValidMatrix<T, N>
-	struct MatrixColumn {
+	class MatrixRow {
 		public:
-			inline T &operator[] (se::malge::Uint8 i);
-			inline const T &operator[] (se::malge::Uint8 i) const;
+			T &operator[] (se::malge::Uint8 column);
+			const T &operator[] (se::malge::Uint8 column) const;
 
 		private:
-			T _padding[4];
+			T *__padding[4];
 	};
+
 
 
 
@@ -54,33 +55,53 @@ namespace se::malge
 	class SE_MALGE_MATRIX_ALIGNMENT(T) Matrix {
 		public:
 			template <typename ...Args>
-			requires (se::malge::IsMathType<Args> && ...) && (sizeof...(Args) >= 0 && sizeof...(Args) <= N * N)
+			requires (se::malge::IsMathType<Args> && ...) && (sizeof...(Args) <= N*N)
 			Matrix(Args ...args);
 			template <typename U>
 			requires se::malge::IsValidMatrix<U, N>
 			Matrix(const se::malge::Matrix<U, N> &matrix);
+			template <typename U>
+			requires se::malge::IsValidMatrix<U, N>
+			Matrix(se::malge::Matrix<U, N> &&matrix) noexcept;
 
 			template <typename U>
 			requires se::malge::IsValidMatrix<U, N>
 			const se::malge::Matrix<T, N> &operator=(const se::malge::Matrix<U, N> &matrix);
+			template <typename U>
+			requires se::malge::IsValidMatrix<U, N>
+			const se::malge::Matrix<T, N> &operator=(se::malge::Matrix<U, N> &&matrix) noexcept;
 
-			inline se::malge::MatrixColumn<T, N> &operator[] (se::malge::Uint8 i);
-			inline const se::malge::MatrixColumn<T, N> &operator[] (se::malge::Uint8 i) const;
 
+			se::malge::MatrixRow<T, N> operator[] (se::malge::Uint8 row);
+			se::malge::MatrixRow<T, N> operator[] (se::malge::Uint8 row) const;
 
 			template <typename U>
 			requires se::malge::IsValidMatrix<U, N>
 			const se::malge::Matrix<T, N> &operator+=(const se::malge::Matrix<U, N> &matrix);
-
 			template <typename U>
 			requires se::malge::IsValidMatrix<U, N>
 			const se::malge::Matrix<T, N> &operator-=(const se::malge::Matrix<U, N> &matrix);
-
+			template <typename U>
+			requires se::malge::IsValidMatrix<U, N>
+			const se::malge::Matrix<T, N> &operator*=(const se::malge::Matrix<U, N> &matrix);
 
 
 		private:
-			se::malge::MatrixColumn<T, N> m_columns[N];
+			T __padding[16];
 	};
+
+
+
+
+	template <typename T, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N>
+	se::malge::Matrix<T, N> operator+(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<T, N> &rhs);
+	template <typename T, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N>
+	se::malge::Matrix<T, N> operator-(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<T, N> &rhs);
+	template <typename T, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N>
+	se::malge::Matrix<T, N> operator*(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<T, N> &rhs);
 
 
 
@@ -140,7 +161,6 @@ namespace se::malge
 	using Mat4f32 = se::malge::Mat4<se::malge::Float32>;
 	using Mat4f64 = se::malge::Mat4<se::malge::Float64>;
 	using Mat4f   = se::malge::Mat4<se::malge::Float>;
-
 
 
 } // namespace se::malge

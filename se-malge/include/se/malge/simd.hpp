@@ -59,6 +59,14 @@ namespace se::malge::simd
 
 	template <typename T>
 	requires se::malge::simd::IsValidSIMD<T>
+	SIMD_TYPE(T) setZero();
+
+	template <typename T>
+	requires se::malge::simd::IsValidSIMD<T>
+	SIMD_TYPE(T) loadScalar(const T *scalar);
+
+	template <typename T>
+	requires se::malge::simd::IsValidSIMD<T>
 	void store(SIMD_TYPE(T) a, T data[4]);
 
 	template <typename T>
@@ -100,6 +108,30 @@ namespace se::malge::simd
 		template <>
 		inline SIMD_TYPE(se::malge::Float) load<se::malge::Float> (const se::malge::Float data[4]) {
 			return _mm_load_ps(data);
+		}
+
+
+
+		template <>
+		inline SIMD_TYPE(se::malge::Int32) setZero<se::malge::Int32> () {
+			return _mm_setzero_si128();
+		}
+
+		template <>
+		inline SIMD_TYPE(se::malge::Float) setZero<se::malge::Float> () {
+			return _mm_setzero_ps();
+		}
+
+
+
+		template <>
+		inline SIMD_TYPE(se::malge::Int32) loadScalar<se::malge::Int32> (const se::malge::Int32 *scalar) {
+			return _mm_cvtps_epi32(_mm_load_ps1((const float*)scalar));
+		}
+
+		template <>
+		inline SIMD_TYPE(se::malge::Float) loadScalar<se::malge::Float> (const se::malge::Float *scalar) {
+			return _mm_load_ps1(scalar);
 		}
 
 
