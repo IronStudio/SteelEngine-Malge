@@ -84,6 +84,9 @@ namespace se::malge
 			template <typename U>
 			requires se::malge::IsValidMatrix<U, N>
 			const se::malge::Matrix<T, N> &operator*=(const se::malge::Matrix<U, N> &matrix);
+			template <typename U>
+			requires se::malge::IsMathType<U>
+			const se::malge::Matrix<T, N> &operator*=(U scalar);
 
 
 		private:
@@ -93,15 +96,21 @@ namespace se::malge
 
 
 
-	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
-	se::malge::Matrix<T, N> operator+(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<T, N> &rhs);
-	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
-	se::malge::Matrix<T, N> operator-(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<T, N> &rhs);
-	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
-	se::malge::Matrix<T, N> operator*(const se::malge::Matrix<T, N> &lhs, se::malge::Matrix<T, N> rhs);
+	template <typename T, typename U, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>
+	se::malge::Matrix<T, N> operator+(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<U, N> &rhs);
+	template <typename T, typename U, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>
+	se::malge::Matrix<T, N> operator-(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<U, N> &rhs);
+	template <typename T, typename U, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>
+	se::malge::Matrix<T, N> operator*(const se::malge::Matrix<U, N> &lhs, se::malge::Matrix<T, N> rhs);
+	template <typename T, typename U, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N> && se::malge::IsMathType<U>
+	se::malge::Matrix<T, N> operator*(se::malge::Matrix<T, N> matrix, U scalar);
+	template <typename T, typename U, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N> && se::malge::IsMathType<U>
+	se::malge::Matrix<T, N> operator*(U scalar, se::malge::Matrix<T, N> matrix);
 
 
 

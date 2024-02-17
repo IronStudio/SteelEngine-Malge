@@ -406,24 +406,82 @@ namespace se::malge
 
 	template <typename T, se::malge::Uint8 N>
 	requires se::malge::IsValidMatrix<T, N>
-	se::malge::Matrix<T, N> operator+(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<T, N> &rhs) {
+	template <typename U>
+	requires se::malge::IsMathType<U>
+	const se::malge::Matrix<T, N> &Matrix<T, N>::operator*=(U scalar) {
+		#ifdef SE_MALGE_VECTORIZE
+			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
+				auto c1 {se::malge::simd::load<T> (reinterpret_cast<const T*> (this))};
+				auto c2 {se::malge::simd::load<T> (reinterpret_cast<const T*> (this) + 4)};
+				auto c3 {se::malge::simd::load<T> (reinterpret_cast<const T*> (this) + 8)};
+				auto c4 {se::malge::simd::load<T> (reinterpret_cast<const T*> (this) + 12)};
+				auto s {se::malge::simd::loadScalar<T> (&scalar)};
+				c1 = se::malge::simd::mul<T> (c1, s);
+				c2 = se::malge::simd::mul<T> (c2, s);
+				c3 = se::malge::simd::mul<T> (c3, s);
+				c4 = se::malge::simd::mul<T> (c4, s);
+				se::malge::simd::store<T> (c1, reinterpret_cast<const T*> (this));
+				se::malge::simd::store<T> (c2, reinterpret_cast<const T*> (this + 4));
+				se::malge::simd::store<T> (c3, reinterpret_cast<const T*> (this + 8));
+				se::malge::simd::store<T> (c4, reinterpret_cast<const T*> (this + 12));
+			}
+
+			else {
+		#endif
+		
+
+		for (se::malge::Uint8 c {0}; c < N; ++c) {
+			for (se::malge::Uint8 r {0}; r < N; ++r) {
+				*(reinterpret_cast<const T*> (this) + c * 4 + r) *= scalar;
+			}
+		}
+
+
+		#ifdef SE_MALGE_VECTORIZE
+			}
+		#endif
+
+		return *this;
+	}
+
+
+
+	template <typename T, typename U, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>
+	se::malge::Matrix<T, N> operator+(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<U, N> &rhs) {
 		return lhs += rhs;
 	}
 
 
 
-	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
-	se::malge::Matrix<T, N> operator-(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<T, N> &rhs) {
+	template <typename T, typename U, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>
+	se::malge::Matrix<T, N> operator-(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<U, N> &rhs) {
 		return lhs -= rhs;
 	}
 
 
 
-	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
-	se::malge::Matrix<T, N> operator*(const se::malge::Matrix<T, N> &lhs, se::malge::Matrix<T, N> rhs) {
+	template <typename T, typename U, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>
+	se::malge::Matrix<T, N> operator*(const se::malge::Matrix<U, N> &lhs, se::malge::Matrix<T, N> rhs) {
 		return rhs *= lhs;
+	}
+
+
+
+	template <typename T, typename U, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N> && se::malge::IsMathType<U>
+	se::malge::Matrix<T, N> operator*(se::malge::Matrix<T, N> matrix, U scalar) {
+		return matrix *= scalar;
+	}
+
+
+
+	template <typename T, typename U, se::malge::Uint8 N>
+	requires se::malge::IsValidMatrix<T, N> && se::malge::IsMathType<U>
+	se::malge::Matrix<T, N> operator*(U scalar, se::malge::Matrix<T, N> matrix) {
+		return matrix *= scalar;
 	}
 
 
