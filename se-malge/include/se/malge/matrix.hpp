@@ -101,7 +101,7 @@ namespace se::malge
 	se::malge::Matrix<T, N> operator-(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<T, N> &rhs);
 	template <typename T, se::malge::Uint8 N>
 	requires se::malge::IsValidMatrix<T, N>
-	se::malge::Matrix<T, N> operator*(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<T, N> &rhs);
+	se::malge::Matrix<T, N> operator*(const se::malge::Matrix<T, N> &lhs, se::malge::Matrix<T, N> rhs);
 
 
 
