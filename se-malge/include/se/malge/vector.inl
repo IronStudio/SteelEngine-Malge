@@ -109,6 +109,26 @@ namespace se::malge
 	template <typename T, se::malge::Uint8 N>
 	requires se::malge::IsValidVector<T, N>
 	template <typename U>
+	requires se::malge::IsValidVector<U, N>
+	bool Vector<T, N>::operator==(const se::malge::Vector<U, N> &vector) const {
+		if constexpr (N == 2) {
+			return this->x == vector.x && this->y == vector.y;
+		}
+
+		else if constexpr (N == 3) {
+			return this->x == vector.x && this->y == vector.y && this->z == vector.z;
+		}
+
+		else if constexpr (N == 4) {
+			return this->x == vector.x && this->y == vector.y && this->z == vector.z && this->w == vector.w;
+		}
+	}
+
+
+
+	template <typename T, se::malge::Uint8 N>
+	requires se::malge::IsValidVector<T, N>
+	template <typename U>
 	requires se::malge::IsMathType<U>
 	const se::malge::Vector<T, N> &Vector<T, N>::operator+=(const se::malge::Vector<U, N> &vector) {
 		#ifdef SE_MALGE_VECTORIZE
