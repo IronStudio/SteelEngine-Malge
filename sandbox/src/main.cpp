@@ -4,7 +4,7 @@
 
 #include <se/malge/vector.hpp>
 #include <se/malge/matrix.hpp>
-#include <se/malge/simd.hpp>
+#include <se/malge/operations.hpp>
 
 
 struct Chrono {
@@ -76,6 +76,11 @@ int main(int, char **) {
 	std::cout << matrix3 << std::endl;
 	std::cout << "---------" << std::endl;
 
+
+	se::malge::Vec3f vector {1.f, 2.f, 3.f};
+	vector = matrix3 * vector;
+	std::cout << vector << std::endl;
+	std::cout << "---------" << std::endl;
 
 
 

@@ -286,7 +286,7 @@ namespace se::malge
 		
 		for (se::malge::Uint8 c {0}; c < N; ++c) {
 			for (se::malge::Uint8 r {0}; r < N; ++r)
-				*(reinterpret_cast<T*> (this) + r + c * 4) += *(reinterpret_cast<const U*> (matrix) + r + c * 4);
+				*(reinterpret_cast<T*> (this) + r + c * 4) += *(reinterpret_cast<const U*> (&matrix) + r + c * 4);
 		}
 
 		#ifdef SE_MALGE_VECTORIZE
@@ -321,7 +321,7 @@ namespace se::malge
 		
 		for (se::malge::Uint8 c {0}; c < N; ++c) {
 			for (se::malge::Uint8 r {0}; r < N; ++r)
-				*(reinterpret_cast<T*> (this) + r + c * 4) -= *(reinterpret_cast<const U*> (matrix) + r + c * 4);
+				*(reinterpret_cast<T*> (this) + r + c * 4) -= *(reinterpret_cast<const U*> (&matrix) + r + c * 4);
 		}
 
 		#ifdef SE_MALGE_VECTORIZE
