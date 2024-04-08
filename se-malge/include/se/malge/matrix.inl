@@ -14,7 +14,7 @@
 namespace se::malge
 {
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	T &MatrixRow<T, N>::operator[] (se::malge::Uint8 column) {
 		SE_MALGE_ASSERT(column >= 0 && column < N, "You can't access a column of a matrix that doesn't exist");
 		return *(reinterpret_cast<T**> (this)[column]);
@@ -23,7 +23,7 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	const T &MatrixRow<T, N>::operator[] (se::malge::Uint8 column) const {
 		SE_MALGE_ASSERT(column >= 0 && column < N, "You can't access a column of a matrix that doesn't exist");
 		return *(reinterpret_cast<const T**> (this)[column]);
@@ -35,9 +35,9 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	template <typename ...Args>
-	requires (se::malge::IsMathType<Args> && ...) && (sizeof...(Args) <= N*N)
+	SE_MALGE_REQUIRES((se::malge::IsMathType<Args> && ...) && (sizeof...(Args) <= N*N))
 	Matrix<T, N>::Matrix(Args ...args) {
 		#ifdef SE_MALGE_VECTORIZE
 			if constexpr (se::malge::simd::IsValidSIMD<T>) {
@@ -88,9 +88,9 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	template <typename U>
-	requires se::malge::IsValidMatrix<U, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<U, N>)
 	Matrix<T, N>::Matrix(const se::malge::Matrix<U, N> &matrix) {
 		#ifdef SE_MALGE_VECTORIZE
 			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
@@ -124,9 +124,9 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	template <typename U>
-	requires se::malge::IsValidMatrix<U, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<U, N>)
 	Matrix<T, N>::Matrix(se::malge::Matrix<U, N> &&matrix) noexcept {
 		#ifdef SE_MALGE_VECTORIZE
 			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
@@ -160,9 +160,9 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	template <typename U>
-	requires se::malge::IsValidMatrix<U, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<U, N>)
 	const se::malge::Matrix<T, N> &Matrix<T, N>::operator=(const se::malge::Matrix<U, N> &matrix) {
 		#ifdef SE_MALGE_VECTORIZE
 			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
@@ -198,9 +198,9 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	template <typename U>
-	requires se::malge::IsValidMatrix<U, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<U, N>)
 	const se::malge::Matrix<T, N> &Matrix<T, N>::operator=(se::malge::Matrix<U, N> &&matrix) noexcept {
 		#ifdef SE_MALGE_VECTORIZE
 			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
@@ -236,7 +236,7 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	se::malge::MatrixRow<T, N> Matrix<T, N>::operator[] (se::malge::Uint8 row) {
 		SE_MALGE_ASSERT(row >= 0 && row < N, "You can't access a row of a matrix that doesn't exist");
 		se::malge::MatrixRow<T, N> matrixRow {};
@@ -250,7 +250,7 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	se::malge::MatrixRow<T, N> Matrix<T, N>::operator[] (se::malge::Uint8 row) const {
 		SE_MALGE_ASSERT(row >= 0 && row < N, "You can't access a row of a matrix that doesn't exist");
 		se::malge::MatrixRow<T, N> matrixRow {};
@@ -264,9 +264,9 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	template <typename U>
-	requires se::malge::IsValidMatrix<U, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<U, N>)
 	const se::malge::Matrix<T, N> &Matrix<T, N>::operator+=(const se::malge::Matrix<U, N> &matrix) {
 		#ifdef SE_MALGE_VECTORIZE
 			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
@@ -299,9 +299,9 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	template <typename U>
-	requires se::malge::IsValidMatrix<U, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<U, N>)
 	const se::malge::Matrix<T, N> &Matrix<T, N>::operator-=(const se::malge::Matrix<U, N> &matrix) {
 		#ifdef SE_MALGE_VECTORIZE
 			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
@@ -334,9 +334,9 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	template <typename U>
-	requires se::malge::IsValidMatrix<U, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<U, N>)
 	const se::malge::Matrix<T, N> &Matrix<T, N>::operator*=(const se::malge::Matrix<U, N> &matrix) {
 		#ifdef SE_MALGE_VECTORIZE
 			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
@@ -405,9 +405,9 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	template <typename U>
-	requires se::malge::IsMathType<U>
+	SE_MALGE_REQUIRES(se::malge::IsMathType<U>)
 	const se::malge::Matrix<T, N> &Matrix<T, N>::operator*=(U scalar) {
 		#ifdef SE_MALGE_VECTORIZE
 			if constexpr (se::malge::simd::IsValidSIMD<T> && std::is_same_v<T, U>) {
@@ -447,7 +447,7 @@ namespace se::malge
 
 
 	template <typename T, typename U, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>)
 	se::malge::Matrix<T, N> operator+(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<U, N> &rhs) {
 		return lhs += rhs;
 	}
@@ -455,7 +455,7 @@ namespace se::malge
 
 
 	template <typename T, typename U, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>)
 	se::malge::Matrix<T, N> operator-(se::malge::Matrix<T, N> lhs, const se::malge::Matrix<U, N> &rhs) {
 		return lhs -= rhs;
 	}
@@ -463,7 +463,7 @@ namespace se::malge
 
 
 	template <typename T, typename U, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N> && se::malge::IsValidMatrix<U, N>)
 	se::malge::Matrix<T, N> operator*(const se::malge::Matrix<U, N> &lhs, se::malge::Matrix<T, N> rhs) {
 		return rhs *= lhs;
 	}
@@ -471,7 +471,7 @@ namespace se::malge
 
 
 	template <typename T, typename U, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N> && se::malge::IsMathType<U>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N> && se::malge::IsMathType<U>)
 	se::malge::Matrix<T, N> operator*(se::malge::Matrix<T, N> matrix, U scalar) {
 		return matrix *= scalar;
 	}
@@ -479,7 +479,7 @@ namespace se::malge
 
 
 	template <typename T, typename U, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N> && se::malge::IsMathType<U>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N> && se::malge::IsMathType<U>)
 	se::malge::Matrix<T, N> operator*(U scalar, se::malge::Matrix<T, N> matrix) {
 		return matrix *= scalar;
 	}
@@ -487,7 +487,7 @@ namespace se::malge
 
 
 	template <typename T, se::malge::Uint8 N>
-	requires se::malge::IsValidMatrix<T, N>
+	SE_MALGE_REQUIRES(se::malge::IsValidMatrix<T, N>)
 	std::ostream &operator<<(std::ostream &stream, const se::malge::Matrix<T, N> &matrix) {
 		for (se::malge::Uint8 r {0}; r < N; ++r) {
 			stream << "|";
