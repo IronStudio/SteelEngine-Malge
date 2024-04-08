@@ -64,6 +64,10 @@ namespace se::malge
 			SE_MALGE_REQUIRES(se::malge::IsValidVector<U, N>)
 			const se::malge::Vector<T, N> &operator=(const se::malge::Vector<U, N> &vector);
 
+			template <typename U>
+			requires se::malge::IsValidVector<U, N>
+			bool operator==(const se::malge::Vector<U, N> &vector) const;
+
 
 			template <typename U>
 			SE_MALGE_REQUIRES(se::malge::IsMathType<U>)
