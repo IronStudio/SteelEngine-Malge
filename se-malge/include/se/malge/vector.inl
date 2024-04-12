@@ -331,7 +331,7 @@ namespace se::malge
 
 		T result {0};
 		for (se::malge::Uint8 i {0}; i < N; ++i)
-			result += reinterpret_cast<const T*> (&lhs)[i] * static_cast<T> (reinterpret_cast<const U*> (&lhs)[i]);
+			result += reinterpret_cast<const T*> (&lhs)[i] * static_cast<T> (reinterpret_cast<const U*> (&rhs)[i]);
 		return result;
 
 		#ifdef SE_MALGE_VECTORIZE
@@ -357,9 +357,9 @@ namespace se::malge
 			else {
 		#endif
 
-		result.x = lhs.y * static_cast<U> (rhs.z) - lhs.z * static_cast<U> (rhs.y);
-		result.y = lhs.z * static_cast<U> (rhs.x) - lhs.x * static_cast<U> (rhs.z);
-		result.z = lhs.x * static_cast<U> (rhs.y) - lhs.y * static_cast<U> (rhs.x);
+		result.x = lhs.y * static_cast<T> (rhs.z) - lhs.z * static_cast<T> (rhs.y);
+		result.y = lhs.z * static_cast<T> (rhs.x) - lhs.x * static_cast<T> (rhs.z);
+		result.z = lhs.x * static_cast<T> (rhs.y) - lhs.y * static_cast<T> (rhs.x);
 
 		#ifdef SE_MALGE_VECTORIZE
 			}
