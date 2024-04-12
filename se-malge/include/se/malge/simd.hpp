@@ -16,13 +16,14 @@
 
 #include <type_traits>
 
+#include "se/malge/requires.hpp"
 #include "se/malge/types.hpp"
 
 
 
 namespace se::malge::simd
 {
-	#ifdef SE_MALGE_ARCHITECTURE_X86
+	#if defined(SE_MALGE_ARCHITECTURE_X86) && !defined(__APPLE__)
 		template <typename T>
 		concept IsValidSIMD = std::is_same_v<T, se::malge::Int32> ||
 			std::is_same_v<T, se::malge::Float32>;
@@ -30,7 +31,7 @@ namespace se::malge::simd
 
 
 	template <typename T>
-	requires se::malge::simd::IsValidSIMD<T>
+	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
 	struct Register;
 
 
@@ -54,47 +55,47 @@ namespace se::malge::simd
 
 
 	template <typename T>
-	requires se::malge::simd::IsValidSIMD<T>
+	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
 	SIMD_TYPE(T) load(const T data[4]);
 
 	template <typename T>
-	requires se::malge::simd::IsValidSIMD<T>
+	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
 	SIMD_TYPE(T) setZero();
 
 	template <typename T>
-	requires se::malge::simd::IsValidSIMD<T>
+	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
 	SIMD_TYPE(T) loadScalar(const T *scalar);
 
 	template <typename T>
-	requires se::malge::simd::IsValidSIMD<T>
+	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
 	void store(SIMD_TYPE(T) a, T data[4]);
 
 	template <typename T>
-	requires se::malge::simd::IsValidSIMD<T>
+	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
 	T convertSingleLaneToScalar(SIMD_TYPE(T) a);
 
 	template <typename T>
-	requires se::malge::simd::IsValidSIMD<T>
+	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
 	SIMD_TYPE(T) add(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
 
 	template <typename T>
-	requires se::malge::simd::IsValidSIMD<T>
+	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
 	SIMD_TYPE(T) sub(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
 
 	template <typename T>
-	requires se::malge::simd::IsValidSIMD<T>
+	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
 	SIMD_TYPE(T) mul(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
 
 	template <typename T>
-	requires se::malge::simd::IsValidSIMD<T>
+	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
 	SIMD_TYPE(T) dot(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
 
 	template <typename T>
-	requires se::malge::simd::IsValidSIMD<T>
+	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
 	SIMD_TYPE(T) cross(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
 
 	template <typename T>
-	requires std::is_same_v<T, se::malge::Float32>
+	SE_MALGE_REQUIRES(std::is_same_v<T, se::malge::Float32>)
 	SIMD_TYPE(T) ssqrt(SIMD_TYPE(T) a);
 
 
