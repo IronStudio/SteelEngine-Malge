@@ -56,47 +56,47 @@ namespace se::malge::simd
 
 	template <typename T>
 	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
-	SIMD_TYPE(T) load(const T data[4]);
+	static SIMD_TYPE(T) load(const T data[4]);
 
 	template <typename T>
 	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
-	SIMD_TYPE(T) setZero();
+	static SIMD_TYPE(T) setZero();
 
 	template <typename T>
 	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
-	SIMD_TYPE(T) loadScalar(const T *scalar);
+	static SIMD_TYPE(T) loadScalar(const T *scalar);
 
 	template <typename T>
 	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
-	void store(SIMD_TYPE(T) a, T data[4]);
+	static void store(SIMD_TYPE(T) a, T data[4]);
 
 	template <typename T>
 	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
-	T convertSingleLaneToScalar(SIMD_TYPE(T) a);
+	static T convertSingleLaneToScalar(SIMD_TYPE(T) a);
 
 	template <typename T>
 	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
-	SIMD_TYPE(T) add(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
+	static SIMD_TYPE(T) add(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
 
 	template <typename T>
 	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
-	SIMD_TYPE(T) sub(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
+	static SIMD_TYPE(T) sub(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
 
 	template <typename T>
 	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
-	SIMD_TYPE(T) mul(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
+	static SIMD_TYPE(T) mul(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
 
 	template <typename T>
 	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
-	SIMD_TYPE(T) dot(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
+	static SIMD_TYPE(T) dot(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
 
 	template <typename T>
 	SE_MALGE_REQUIRES(se::malge::simd::IsValidSIMD<T>)
-	SIMD_TYPE(T) cross(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
+	static SIMD_TYPE(T) cross(SIMD_TYPE(T) a, SIMD_TYPE(T) b);
 
 	template <typename T>
 	SE_MALGE_REQUIRES(std::is_same_v<T, se::malge::Float32>)
-	SIMD_TYPE(T) ssqrt(SIMD_TYPE(T) a);
+	static SIMD_TYPE(T) ssqrt(SIMD_TYPE(T) a);
 
 
 
